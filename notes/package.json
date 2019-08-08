@@ -1,0 +1,19 @@
+{
+  "name": "notes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "notes.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "validator": "^10.11.0",
+    "yargs": "^13.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  }
+}
