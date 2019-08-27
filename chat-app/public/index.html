@@ -7,7 +7,9 @@
   </head>
   <body>
     <div class='chat-container'>
-      <div class='chat-sidebar'> </div>
+      <div class='chat-sidebar'>
+        <div class='chat-sidebar-container' id='sidebarInfo' > </div>
+      </div>
       <div class='chat-content-container'>
         <div class='chat-message-list' id='receivedMessage'> </div>
         <div class='chat-form-wrapper'>
@@ -35,6 +37,15 @@
             {{message}}
           {{/if}}
         <div>
+      </div>
+    </script>
+
+    <script id='sidebarInfoTemplate' type='text/html'>
+      <div class='sidebar-channel-name'> {{channel}} </div>
+      <div class='sidebar-user-list-container'>
+        {{#each users}}
+          <div class='sidebar-user'> {{username}} </div>
+        {{/each}}
       </div>
     </script>
 

@@ -5,9 +5,11 @@ const sendLocationButton = document.querySelector('#sendLocation');
 const sendButton = document.querySelector('#send');
 const messageInput = document.querySelector('#message');
 const receivedMessage = document.querySelector('#receivedMessage');
+const sidebarInfo = document.querySelector('#sidebarInfo');
 
 //Template
 const receivedMessageTemplate = document.querySelector('#receivedMessageTemplate').innerHTML;
+const sidebarInfoTemplate = document.querySelector('#sidebarInfoTemplate').innerHTML;
 
 const { username, channel } = Qs.parse(location.search, { ignoreQueryPrefix: true });
 
@@ -64,11 +66,10 @@ sendLocationButton.addEventListener('click', () => {
   });
 });
 
-
-// socket.on('count', (count) => {
-//   console.log(`count ${count}`);
-// });
-
-// document.querySelector('#inc').addEventListener('click', () => {
-//   socket.emit('inc');
-// })
+socket.on('sidebarInfo', ({ channel, users }) => {
+  const template = Handlebars.compile(sidebarInfoTemplate);
+  sidebarInfo.innerHTML = template({
+    channel,
+    users
+  })
+});

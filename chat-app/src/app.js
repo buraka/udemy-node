@@ -26,6 +26,11 @@ io.on('connection', (socket) => {
 
     socket.join(channel);
 
+    io.to(channel).emit('sidebarInfo', {
+      channel,
+      users: getUserListInChannel(channel)
+    });
+
     socket.emit('receivedMessage', getMessage('Admin', 'Hosgeldiniz.'));
     socket.broadcast.to(channel)
         .emit('receivedMessage', getMessage('Admin', `${username} kullanicisi baglandi.`));
@@ -46,8 +51,14 @@ io.on('connection', (socket) => {
     const user = removeUser(socket.id);
 
     if (user) {
-      io.to(user.channel).emit('receivedMessage',
-            getMessage('Admin', `${user.username} kullanicisi gitti.`))
+      const { username, channel } = user;
+
+      io.to(channel).emit('sidebarInfo', {
+        channel,
+        users: getUserListInChannel(channel)
+      });
+      io.to(channel).emit('receivedMessage',
+            getMessage('Admin', `${username} kullanicisi gitti.`))
     }
   });
 
