@@ -104,3 +104,28 @@ button:disabled {
 .message-content {
   font-size: 18px;
 }
+
+.chat-sidebar-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-channel-name {
+  height: 130px;
+  font-size: 34px;
+  color: darkgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sidebar-user-list-container {
+  padding-left: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-user {
+  font-size: 20px;
+  color: white;
+}
