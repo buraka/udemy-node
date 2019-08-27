@@ -25,7 +25,7 @@
     <script id='receivedMessageTemplate' type='text/html'>
       <div class='message-wrapper'>
         <div class='message-info-wrapper'>
-          <div class='message-name'> Isim </div>
+          <div class='message-name'> {{username}} </div>
           <div class='message-date'> {{createdAt}} </div>
         </div>
         <div class='message-content'>
@@ -38,6 +38,7 @@
       </div>
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.8.0/qs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.1.2/handlebars.min.js"></script>
     <script src="/socket.io/socket.io.js" > </script>

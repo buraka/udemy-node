@@ -3,6 +3,7 @@ const path = require('path');
 const http = require('http');
 const socketio = require('socket.io');
 const { getMessage } = require('./utils/message');
+const { addUser, getUser, removeUser, getUserListInChannel } = require('./utils/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -14,36 +15,48 @@ const publicPathDirectory = path.join(__dirname, '../public');
 
 app.use(express.static(publicPathDirectory));
 
-// let count = 0;
-
 io.on('connection', (socket) => {
 
-  socket.broadcast.emit('receivedMessage', getMessage('Yeni kullanici geldi.'));
+  socket.on('join', ({ username, channel }, callback) => {
+    const { user, error } = addUser(socket.id, username, channel);
+
+    if (error) {
+      return callback(error);
+    }
+
+    socket.join(channel);
+
+    socket.emit('receivedMessage', getMessage('Admin', 'Hosgeldiniz.'));
+    socket.broadcast.to(channel)
+        .emit('receivedMessage', getMessage('Admin', `${username} kullanicisi baglandi.`));
+
+  });
 
   socket.on('sendMessage', (messageText, callback) => {
+    const user = getUser(socket.id);
+
     if (messageText === 'Merhaba') {
       return callback(false);
     }
-    io.emit('receivedMessage', getMessage(messageText));
+    io.to(user.channel).emit('receivedMessage', getMessage(user.username, messageText));
     callback(true);
   });
 
   socket.on('disconnect', () => {
-    socket.broadcast.emit('receivedMessage', getMessage('Kullanici gitti.'))
+    const user = removeUser(socket.id);
+
+    if (user) {
+      io.to(user.channel).emit('receivedMessage',
+            getMessage('Admin', `${user.username} kullanicisi gitti.`))
+    }
   });
 
-  socket.on('sendLocation', coords => {
-    socket.broadcast.emit('receivedMessage',
-          `Koordinatlar geld'. Enlem ${coords.latitude}, boylam: ${coords.longitude}`);
+  socket.on('sendLocation', ({ latitude, longitude }) => {
+    const { username, channel } = getUser(socket.id);
+    const url = `http://maps.google.com?q=${latitude},${longitude}`;
+    io.to(channel).emit('receivedMessage',
+          getMessage(username, undefined, url));
   })
-
-
-  // console.log('web socket olusturuldu.');
-  // socket.emit('count', ++count);
-  //
-  // socket.on('inc', () => {
-  //   io.emit('count', ++count)
-  // })
 });
 
 server.listen(port, () => {

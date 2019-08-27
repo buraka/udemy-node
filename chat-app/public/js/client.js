@@ -9,6 +9,14 @@ const receivedMessage = document.querySelector('#receivedMessage');
 //Template
 const receivedMessageTemplate = document.querySelector('#receivedMessageTemplate').innerHTML;
 
+const { username, channel } = Qs.parse(location.search, { ignoreQueryPrefix: true });
+
+socket.emit('join', { username, channel }, (error, user) => {
+  if (error) {
+    alert(error);
+  }
+});
+
 sendButton.addEventListener('click', () => {
   sendButton.setAttribute('disabled', 'disabled');
   const messageText = messageInput.value;
@@ -26,10 +34,12 @@ sendButton.addEventListener('click', () => {
 });
 
 socket.on('receivedMessage', (messageObj) => {
-  const { message, createdAt } = messageObj;
+  const { username, message, url, createdAt } = messageObj;
   const template = Handlebars.compile(receivedMessageTemplate);
   receivedMessage.insertAdjacentHTML('beforeend', template({
+    username,
     message,
+    url,
     createdAt: moment().format('H:mm')
   }));
 });
@@ -51,10 +61,6 @@ sendLocationButton.addEventListener('click', () => {
     })
     //tekrar aktif et
     sendLocationButton.removeAttribute('disabled');
-    const template = Handlebars.compile(receivedMessageTemplate);
-    receivedMessage.insertAdjacentHTML('beforeend', template({
-      url: `http://maps.google.com?q=${latitude},${longitude}`
-    }));
   });
 });
 
